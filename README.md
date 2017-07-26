@@ -3,6 +3,8 @@
 A minimalistic syslog daemon I use when debugging infrastructure, output is
 similar to papertrail.
 
+[![asciicast](https://asciinema.org/a/brcs4KzsA37b2RTjMsE19zqXR.png)](https://asciinema.org/a/brcs4KzsA37b2RTjMsE19zqXR)
+
 ## Installation
 
 Either:
@@ -33,6 +35,8 @@ Flags:
 The template system uses go templates and takes the actual syslog message
 as a map, standards fields provided in the message are:
 
+* content
+* tag
 * app_name
 * proc_id
 * msg_id
@@ -59,7 +63,7 @@ A couple helper functions are also provided:
 ### Default template
 
 ```
-{{ .timestamp }} [{{ severity .severity }}] {{ yellow .hostname }} {{ blue .app_name }}: {{ .message }}
+{{ .timestamp }} [{{ severity .severity }}] {{ yellow .hostname }} {{ or .app_name .tag | blue }}: {{ or .message .content }}
 ```
 
 ## License

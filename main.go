@@ -41,7 +41,7 @@ var (
 			String()
 )
 
-var defaultTemplate = "{{ .timestamp }} [{{ severity .severity }}] {{ yellow .hostname }} {{ blue .app_name }}: {{ .message }}"
+var defaultTemplate = "{{ .timestamp }} [{{ severity .severity }}] {{ yellow .hostname }} {{ or .app_name .tag | blue }}: {{ or .message .content }}"
 
 func main() {
 	kingpin.MustParse(app.Parse(os.Args[1:]))
@@ -50,7 +50,7 @@ func main() {
 	handler := syslog.NewChannelHandler(channel)
 
 	server := syslog.NewServer()
-	server.SetFormat(syslog.RFC5424)
+	server.SetFormat(syslog.Automatic)
 	server.SetHandler(handler)
 
 	var err error
